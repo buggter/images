@@ -14,7 +14,7 @@
         
         /* Main Menu Styling */
         #main-menu { position: absolute; inset: 0; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; z-index: 4000; }
-        .menu-card { background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); padding: 2rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); width: 400px; }
+        .menu-card { background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); padding: 2rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); width: 400px; pointer-events: auto; }
         .btn-primary { background: #3b82f6; color: white; padding: 12px 24px; border-radius: 8px; font-weight: bold; transition: all 0.2s; width: 100%; text-align: center; cursor: pointer; margin-top: 10px; }
         .btn-primary:hover { background: #2563eb; transform: translateY(-2px); }
         
@@ -39,7 +39,7 @@
         
         /* Dialogue Bubble */
         .dialogue-bubble { 
-            position: absolute; 
+            position: absolute;
             background: white; 
             color: black; 
             padding: 4px 8px; 
@@ -47,7 +47,7 @@
             font-size: 18px; 
             pointer-events: none; 
             transform: translate(-50%, -240%); 
-            white-space: nowrap; 
+            white-space: nowrap;
             border: 2px solid #333;
             animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -71,7 +71,7 @@
 
     <!-- Main Menu -->
     <div id="main-menu">
-        <h1 class="text-6xl font-black mb-8 italic tracking-tighter text-blue-400">CHAOS ARENA</h1>
+        <h1 class="text-6xl font-black mb-8 italic tracking-tighter text-blue-400 text-center">CHAOS ARENA</h1>
         
         <div class="menu-card space-y-6">
             <div id="view-home" class="space-y-4">
@@ -116,7 +116,7 @@
         <div id="lobotomy-effect" class="lobotomy-overlay"></div>
         <div id="labels-container" class="absolute inset-0 pointer-events-none"></div>
         
-        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex space-x-4">
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex space-x-4 pointer-events-none">
             <div id="skill-1" class="skill-slot">
                 <span class="text-xs text-gray-400">1</span>
                 <span class="skill-name text-[10px] font-bold text-white text-center px-1 uppercase">---</span>
@@ -155,21 +155,22 @@
     <script>
         /** CONSTANTS & SKILL DEFS **/
         const SKILL_TYPES = {
-            TRAINS: { name: "Trains", cd: 50, color: '#ff4d4d' },
-            HYDRAULIC: { name: "Hydraulic Press", cd: 50, color: '#cccccc' },
-            SLIPPERY: { name: "Slippery", cd: 32, duration: 25, color: '#33ccff' },
-            LOBOTOMY: { name: "Lobotomy", cd: 42, duration: 15, color: '#ff33ff' },
-            LAUGHTER: { name: "Laughter of Death", cd: 50, delay: 10.54, color: '#cc0000' },
-            DOG_ATTACK: { name: "Dog Attack", cd: 50, color: '#8b4513' },
-            ADRENALINE: { name: "Adrenaline", cd: 41, duration: 8, color: '#ff0000' },
-            SWITCH: { name: "Switch", cd: 12, color: '#00ffaa' },
-            BOTH_WALLS: { name: "Both Walls", cd: 48, color: '#555555' }
+            TRAINS: { name: "Trains", cd: 5, color: '#ff4d4d' },
+            HYDRAULIC: { name: "Hydraulic Press", cd: 5, color: '#cccccc' },
+            SLIPPERY: { name: "Slippery", cd: 3.2, duration: 2.5, color: '#33ccff' },
+            LOBOTOMY: { name: "Lobotomy", cd: 4.2, duration: 1.5, color: '#ff33ff' },
+            LAUGHTER: { name: "Laughter of Death", cd: 15, delay: 10.54, color: '#cc0000' },
+            DOG_ATTACK: { name: "Dog Attack", cd: 5, color: '#8b4513' },
+            ADRENALINE: { name: "Adrenaline", cd: 4.1, duration: 2.5, color: '#ff0000' },
+            SWITCH: { name: "Switch", cd: 1.2, color: '#00ffaa' },
+            BOTH_WALLS: { name: "Both Walls", cd: 4.8, color: '#555555' }
         };
 
         const SKILL_LIST = Object.keys(SKILL_TYPES);
         const NICKNAMES = ["GamerGod", "NoobSlayer", "ChaosBringer", "Bot_404", "TheJanitor", "Skibidi", "RageQuitter", "L-Ratio", "DefaultSkin", "Speedy", "FragKing", "Glitched", "VibeCheck", "ZazaEnjoyer", "TheProblem"];
-        const LAUGH_SOUND_URL = "https://github.com/buggter/images/raw/refs/heads/main/Evil%20Laugh%20Sound%20Effect%20(Your%20search%20is%20over).mp3";
-        const DOG_BARK_URL = "https://github.com/buggter/images/raw/refs/heads/main/160092__jorickhoofd__dog-bark-1.mp3";
+        
+        const LAUGH_SOUND_URL = "https://www.soundjay.com/human/laughter-1.mp3";
+        const DOG_BARK_URL = "https://www.soundjay.com/nature/dog-bark-1.mp3";
         const REACTION_EMOJIS = ["😡", "😤", "😒", "😵", "😖"];
 
         /** GAME ENGINE CORE **/
@@ -178,14 +179,12 @@
         let keys = {};
         const FIELD_SIZE = 120;
         let gameStarted = false;
-        
         let config = {
             skinColor: '#00ff00',
             aiCount: 10,
             muted: false
         };
 
-        // UI Management
         function switchMenu(view) {
             document.getElementById('view-home').classList.toggle('hidden', view !== 'home');
             document.getElementById('view-skin').classList.toggle('hidden', view !== 'skin');
@@ -206,7 +205,6 @@
             config.muted = this.checked;
         };
 
-        // Sound Engine
         let audioCtx;
         function initAudio() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -233,6 +231,42 @@
             osc.stop(audioCtx.currentTime + duration);
         }
 
+        // Procedural Texture Generator
+        function createFloorTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            
+            // Background
+            ctx.fillStyle = '#1a0505';
+            ctx.fillRect(0, 0, 512, 512);
+            
+            // Noise/Grit
+            for(let i=0; i<8000; i++) {
+                const x = Math.random() * 512;
+                const y = Math.random() * 512;
+                const size = Math.random() * 2;
+                ctx.fillStyle = `rgba(${100 + Math.random()*50}, 0, 0, ${Math.random() * 0.2})`;
+                ctx.fillRect(x, y, size, size);
+            }
+
+            // Scratches
+            ctx.strokeStyle = 'rgba(255, 50, 50, 0.05)';
+            for(let i=0; i<20; i++) {
+                ctx.beginPath();
+                ctx.moveTo(Math.random()*512, Math.random()*512);
+                ctx.lineTo(Math.random()*512, Math.random()*512);
+                ctx.stroke();
+            }
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.set(4, 4);
+            return texture;
+        }
+
         class Entity {
             constructor(isPlayer = false, nickname = "AI") {
                 this.isPlayer = isPlayer;
@@ -246,34 +280,28 @@
                 this.isLobotomized = false;
                 this.isAdrenaline = false;
                 
-                // Dash state
                 this.dashCD = 0;
                 this.dashDuration = 0;
 
-                // 3D Visual
                 const geometry = new THREE.CylinderGeometry(0.5, 0.5, 1.6, 12);
                 const material = new THREE.MeshStandardMaterial({ color: isPlayer ? config.skinColor : 0x4444ff });
                 this.mesh = new THREE.Mesh(geometry, material);
                 this.mesh.position.y = 1;
                 scene.add(this.mesh);
 
-                // Aura for skills
                 this.aura = new THREE.Mesh(
                     new THREE.SphereGeometry(0.8, 8, 8),
                     new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0, wireframe: true })
                 );
                 this.mesh.add(this.aura);
 
-                // UI Label
                 this.label = document.createElement('div');
                 this.label.className = 'entity-label';
                 this.label.textContent = this.nickname;
                 if (this.isPlayer) this.label.style.color = '#ffff00';
                 document.getElementById('labels-container').appendChild(this.label);
-
-                // Bubble Ref
+                
                 this.activeBubble = null;
-
                 this.spawn();
             }
 
@@ -303,7 +331,6 @@
                 this.mesh.visible = true;
                 this.label.style.display = 'block';
                 this.mesh.position.set((Math.random() - 0.5) * (FIELD_SIZE - 20), 1, (Math.random() - 0.5) * (FIELD_SIZE - 20));
-                
                 if (this.isPlayer) {
                     document.getElementById('lobotomy-effect').style.display = 'none';
                     document.getElementById('death-screen').style.display = 'none';
@@ -313,27 +340,19 @@
             takeDamage(amt, killerId) {
                 if (this.dead) return;
                 this.health -= amt;
-                
-                if (!this.isPlayer) {
-                    this.showDialogue();
-                }
-
+                if (!this.isPlayer) this.showDialogue();
                 playTone(150, 0.1, 'square');
-                if (this.health <= 0) {
-                    this.die(killerId);
-                }
+                if (this.health <= 0) this.die(killerId);
             }
 
             showDialogue() {
-                if (this.activeBubble) return; // Don't stack
-                
+                if (this.activeBubble) return;
                 const emoji = REACTION_EMOJIS[Math.floor(Math.random() * REACTION_EMOJIS.length)];
                 const bubble = document.createElement('div');
                 bubble.className = 'dialogue-bubble';
                 bubble.textContent = emoji;
                 document.getElementById('labels-container').appendChild(bubble);
                 this.activeBubble = bubble;
-
                 setTimeout(() => {
                     if (this.activeBubble === bubble) {
                         bubble.remove();
@@ -355,21 +374,13 @@
                 const feed = document.getElementById('kill-feed');
                 const entry = document.createElement('div');
                 entry.style.color = killerId === "Player" ? "#00ff00" : (killerId === "Reset" ? "#aaa" : "#ff4444");
-                
-                if (killerId === "Reset") {
-                    entry.textContent = `♻️ ${this.nickname} respawned`;
-                } else {
-                    entry.textContent = `${killerId} ➔ ${this.nickname}`;
-                }
-                
+                entry.textContent = killerId === "Reset" ? `♻️ ${this.nickname} respawned` : `${killerId} ➔ ${this.nickname}`;
                 feed.prepend(entry);
                 setTimeout(() => entry.remove(), 4000);
 
                 if (this.isPlayer) {
-                    const deathMsg = document.getElementById('death-msg');
-                    deathMsg.textContent = killerId === "Reset" ? "Respawning" : "Wasted";
+                    document.getElementById('death-msg').textContent = killerId === "Reset" ? "Respawning" : "Wasted";
                     document.getElementById('death-screen').style.display = 'flex';
-                    
                     let timeLeft = 3;
                     const timerEl = document.getElementById('respawn-timer');
                     timerEl.textContent = timeLeft;
@@ -388,7 +399,6 @@
 
             update(dt) {
                 if (this.dead) return;
-
                 if (this.dashCD > 0) this.dashCD -= dt;
                 if (this.dashDuration > 0) {
                     this.dashDuration -= dt;
@@ -416,23 +426,20 @@
                     this.handleAISkills();
                 }
 
-                // Handle Adrenaline collision logic
                 if (this.isAdrenaline) {
                     entities.forEach(other => {
                         if (other !== this && !other.dead && this.mesh.position.distanceTo(other.mesh.position) < 2) {
                             const pushDir = other.mesh.position.clone().sub(this.mesh.position).normalize();
                             other.mesh.position.add(pushDir.multiplyScalar(0.5));
-                            other.takeDamage(10, this.nickname);
+                            other.takeDamage(1, this.nickname);
                         }
                     });
                 }
 
-                // Keep in bounds
                 const limit = FIELD_SIZE / 2;
                 this.mesh.position.x = Math.max(-limit, Math.min(limit, this.mesh.position.x));
                 this.mesh.position.z = Math.max(-limit, Math.min(limit, this.mesh.position.z));
-
-                // Update UI Element Positions (Labels & Bubbles)
+                
                 const pos = this.mesh.position.clone();
                 pos.y += 1.8;
                 pos.project(camera);
@@ -443,7 +450,6 @@
                 this.label.style.left = `${x}px`;
                 this.label.style.top = `${y}px`;
                 this.label.style.opacity = visible ? 1 : 0;
-                
                 if (this.activeBubble) {
                     this.activeBubble.style.left = `${x}px`;
                     this.activeBubble.style.top = `${y}px`;
@@ -457,7 +463,6 @@
                 if (keys['s']) moveDir.z += 1;
                 if (keys['a']) moveDir.x -= 1;
                 if (keys['d']) moveDir.x += 1;
-                
                 if (moveDir.length() === 0) return; 
                 
                 moveDir.normalize();
@@ -471,7 +476,6 @@
                 const ghost = new THREE.Mesh(this.mesh.geometry, new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 }));
                 ghost.position.copy(this.mesh.position);
                 scene.add(ghost);
-                const start = Date.now();
                 const fade = () => {
                     ghost.material.opacity -= 0.02;
                     if (ghost.material.opacity > 0) requestAnimationFrame(fade);
@@ -482,10 +486,11 @@
 
             handlePlayerMovement(dt) {
                 if (this.isFrozen) return;
-
-                let speed = 10.5;
+                
+                // Adjusted player speed to match AI movement logic
+                let speed = 7; 
                 if (this.isSlippery) speed = 25;
-                if (this.isAdrenaline) speed = 20;
+                if (this.isAdrenaline) speed = 18;
 
                 const friction = this.isSlippery ? 0.985 : 0.82;
 
@@ -494,7 +499,6 @@
                 if (keys['s']) dir.z += 1;
                 if (keys['a']) dir.x -= 1;
                 if (keys['d']) dir.x += 1;
-                
                 if (dir.length() > 0) {
                     dir.normalize().multiplyScalar(speed * dt);
                     this.velocity.add(dir);
@@ -502,14 +506,12 @@
 
                 this.mesh.position.add(this.velocity);
                 this.velocity.multiplyScalar(friction);
-                
                 camera.position.set(this.mesh.position.x, this.mesh.position.y + 12, this.mesh.position.z + 20);
                 camera.lookAt(this.mesh.position.x, this.mesh.position.y, this.mesh.position.z);
             }
 
             handleAIMovement(dt) {
                 if (this.isFrozen) return;
-                
                 if (!this.targetPos || Math.random() < 0.01 || this.mesh.position.distanceTo(this.targetPos) < 2) {
                     this.targetPos = new THREE.Vector3((Math.random() - 0.5) * FIELD_SIZE, 1, (Math.random() - 0.5) * FIELD_SIZE);
                 }
@@ -534,7 +536,6 @@
             useSkill(slotIdx, target) {
                 const skill = this.skills[slotIdx];
                 if (!skill || skill.currentCD > 0 || this.dead || this.isFrozen) return;
-
                 switch(skill.type) {
                     case 'TRAINS':
                         if (!target) return;
@@ -594,7 +595,7 @@
                 scene.add(train);
                 const start = Date.now();
                 const animateTrain = () => {
-                    if (train.parent === null) return;
+                    if (!train.parent) return;
                     train.position.x += 1.5;
                     if (train.position.x > target.mesh.position.x - 3 && train.position.x < target.mesh.position.x + 3) {
                         target.die(this.nickname);
@@ -629,10 +630,10 @@
                         } else {
                             hits++;
                             playTone(600, 0.1, 'square');
-                            if (hits < 3) {
-                                setTimeout(strike, 600);
-                            } else {
+                            if (hits < 3) setTimeout(strike, 600);
+                            else {
                                 target.die(this.nickname);
+                                target.isFrozen = false;
                                 scene.remove(dog);
                             }
                         }
@@ -648,7 +649,6 @@
                 const p2 = target.mesh.position.clone();
                 this.mesh.position.copy(p2);
                 target.mesh.position.copy(p1);
-                
                 const sparkle = new THREE.Mesh(new THREE.SphereGeometry(1.5, 8, 8), new THREE.MeshBasicMaterial({ color: 0x00ffaa, wireframe: true }));
                 sparkle.position.copy(p1);
                 scene.add(sparkle);
@@ -672,10 +672,9 @@
                     if (wall1.position.x >= target.mesh.position.x - 0.5) {
                         playTone(50, 0.5, 'square');
                         target.die(this.nickname);
+                        target.isFrozen = false;
                         setTimeout(() => { scene.remove(wall1); scene.remove(wall2); }, 1000);
-                    } else {
-                        requestAnimationFrame(crush);
-                    }
+                    } else requestAnimationFrame(crush);
                 };
                 crush();
             }
@@ -688,14 +687,13 @@
                 setTimeout(() => {
                     playTone(40, 0.4, 'square');
                     const drop = () => {
-                        if (press.parent === null) return;
+                        if (!press.parent) return;
                         press.position.y -= 1.0;
                         if (press.position.y <= 1.5) {
                             target.die(this.nickname);
+                            target.isFrozen = false;
                             setTimeout(() => scene.remove(press), 800);
-                        } else {
-                            requestAnimationFrame(drop);
-                        }
+                        } else requestAnimationFrame(drop);
                     };
                     drop();
                 }, 1200);
@@ -724,6 +722,7 @@
                 setTimeout(() => {
                     target.mesh.remove(laughMarker);
                     target.die(this.nickname);
+                    target.isFrozen = false;
                 }, 10540);
             }
         }
@@ -744,12 +743,10 @@
             player = new Entity(true, "Player");
             player.mesh.material.color.set(config.skinColor);
             entities.push(player);
-
             for(let i=0; i<config.aiCount; i++) {
                 const nick = NICKNAMES[Math.floor(Math.random()*NICKNAMES.length)] + "_" + (i+1);
                 entities.push(new Entity(false, nick));
             }
-
             gameStarted = true;
         }
 
@@ -763,8 +760,8 @@
             const colors = skyGeo.attributes.color;
             for (let i = 0; i < count; i++) {
                 const y = skyGeo.attributes.position.getY(i);
-                if (y > 0) colors.setXYZ(i, 0.4, 0.9, 1.0);
-                else colors.setXYZ(i, 1.0, 0.6, 0.8);
+                if (y > 0) colors.setXYZ(i, 0.05, 0.02, 0.02);
+                else colors.setXYZ(i, 0.02, 0.0, 0.0);
             }
             scene.add(new THREE.Mesh(skyGeo, skyMat));
 
@@ -773,19 +770,26 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(window.devicePixelRatio);
             document.body.appendChild(renderer.domElement);
-
-            scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-            const sun = new THREE.DirectionalLight(0xffffff, 1.0);
+            
+            scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+            const sun = new THREE.DirectionalLight(0xff5555, 0.8);
             sun.position.set(30, 80, 40);
             scene.add(sun);
-
-            const floor = new THREE.Mesh(
-                new THREE.PlaneGeometry(FIELD_SIZE, FIELD_SIZE), 
-                new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.2 })
-            );
+            
+            // Floor with Texture and Red Color
+            const floorGeo = new THREE.PlaneGeometry(FIELD_SIZE, FIELD_SIZE);
+            const floorMat = new THREE.MeshStandardMaterial({ 
+                map: createFloorTexture(),
+                color: 0x442222, // Base red tint
+                roughness: 0.8,
+                metalness: 0.2
+            });
+            const floor = new THREE.Mesh(floorGeo, floorMat);
             floor.rotation.x = -Math.PI/2;
             scene.add(floor);
-            scene.add(new THREE.GridHelper(FIELD_SIZE, 24, 0x555555, 0x333333));
+            
+            // Reddish Grid
+            scene.add(new THREE.GridHelper(FIELD_SIZE, 24, 0xff0000, 0x440000));
 
             clock = new THREE.Clock();
             animate();
@@ -796,18 +800,15 @@
             const dt = clock.getDelta();
 
             if (!gameStarted) {
-                if(camera) {
-                    camera.position.x = Math.sin(Date.now() * 0.0002) * 60;
-                    camera.position.z = Math.cos(Date.now() * 0.0002) * 60;
-                    camera.position.y = 35;
-                    camera.lookAt(0,0,0);
-                    renderer.render(scene, camera);
-                }
+                camera.position.x = Math.sin(Date.now() * 0.0005) * 80;
+                camera.position.z = Math.cos(Date.now() * 0.0005) * 80;
+                camera.position.y = 45;
+                camera.lookAt(0,0,0);
+                renderer.render(scene, camera);
                 return;
             }
 
             entities.forEach(e => e.update(dt));
-            
             if (player && !player.dead) {
                 const target = getNearestTarget();
                 if (keys['1']) player.useSkill(0, target);
@@ -815,7 +816,6 @@
                 if (keys['3']) player.useSkill(2, target);
                 updateUI(target);
             }
-
             renderer.render(scene, camera);
         }
 
@@ -838,7 +838,6 @@
                 STATUS: ${player.dead ? 'DEAD' : 'ALIVE'} | 
                 TARGET: <span style="color:${target ? '#0f0' : '#f44'}">${target ? target.nickname : 'NONE'}</span>
             `;
-
             player.skills.forEach((s, i) => {
                 const slot = document.getElementById(`skill-${i+1}`);
                 const name = slot.querySelector('.skill-name');
@@ -847,21 +846,23 @@
                 if (overlay) overlay.style.height = `${(Math.max(0, s.currentCD) / s.cd) * 100}%`;
                 slot.className = `skill-slot ${s.currentCD <= 0 ? 'ready' : ''} ${s.activeUntil > Date.now() ? 'active' : ''}`;
             });
-
             const dashUI = document.getElementById('dash-ui');
             const dashPerc = (Math.max(0, player.dashCD) / 1.5) * 100;
             dashUI.style.borderColor = player.dashCD <= 0 ? '#0f0' : 'rgba(255,255,255,0.2)';
             dashUI.style.background = `linear-gradient(to top, rgba(0,255,0,0.2) ${100-dashPerc}%, transparent 0%)`;
         }
 
-        window.addEventListener('keydown', e => keys[e.key.toLowerCase()] = true);
+        window.addEventListener('keydown', e => {
+            keys[e.key.toLowerCase()] = true;
+            if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].indexOf(e.code) > -1) e.preventDefault();
+        });
         window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
-
+        
         window.onload = init;
     </script>
 </body>
